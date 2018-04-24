@@ -21,6 +21,8 @@ import org.gradle.api.Incubating;
 import org.gradle.api.XmlProvider;
 import org.gradle.internal.HasInternalProtocol;
 
+import java.util.List;
+
 /**
  * The POM for a Maven publication.
  *
@@ -73,5 +75,35 @@ public interface MavenPom {
      */
     void setPackaging(String packaging);
 
+    String getDescription();
 
+    void setDescription(String description);
+
+    String getUrl();
+
+    void setUrl(String url);
+
+    Integer getInceptionYear();
+
+    void setInceptionYear(Integer inceptionYear);
+
+    void licenses(Action<? super MavenPomLicenseContainer> action);
+
+    List<MavenPomLicense> getLicenses();
+
+    void organization(Action<? super MavenPomOrganization> action);
+
+    MavenPomOrganization getOrganization();
+
+    void developers(Action<? super MavenPomDeveloperContainer> action);
+
+    List<MavenPomDeveloper> getDevelopers();
+
+    void contributors(Action<? super MavenPomContributorContainer> action);
+
+    List<MavenPomContributor> getContributors();
+
+    void scm(Action<? super MavenPomScm> action);
+
+    MavenPomScm getScm();
 }
