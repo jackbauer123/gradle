@@ -19,7 +19,6 @@ package org.gradle.api.publish.ivy.internal.publication;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.gradle.api.Action;
-import org.gradle.api.DomainObjectSet;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.DependencyArtifact;
@@ -363,13 +362,12 @@ public class DefaultIvyPublication implements IvyPublicationInternal {
 
     public IvyNormalizedPublication asNormalisedPublication() {
         populateFromComponent();
-        DomainObjectSet<IvyArtifact> existingDerivedArtifacts = this.derivedArtifacts.matching(new Spec<IvyArtifact>() {
+        Set<IvyArtifact> artifactsToBePublished = CompositeDomainObjectSet.create(IvyArtifact.class, mainArtifacts, metadataArtifacts, derivedArtifacts).matching(new Spec<IvyArtifact>() {
             @Override
             public boolean isSatisfiedBy(IvyArtifact artifact) {
                 return artifact.getFile().exists();
             }
         });
-        Set<IvyArtifact> artifactsToBePublished = CompositeDomainObjectSet.create(IvyArtifact.class, mainArtifacts, metadataArtifacts, existingDerivedArtifacts);
         return new IvyNormalizedPublication(name, getIdentity(), getIvyDescriptorFile(), artifactsToBePublished);
     }
 
