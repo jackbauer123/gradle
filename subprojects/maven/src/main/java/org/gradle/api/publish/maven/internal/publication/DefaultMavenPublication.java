@@ -21,7 +21,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.gradle.api.Action;
-import org.gradle.api.DomainObjectSet;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.artifacts.DependencyArtifact;
 import org.gradle.api.artifacts.DependencyConstraint;
@@ -390,13 +389,12 @@ public class DefaultMavenPublication implements MavenPublicationInternal {
 
     public MavenNormalizedPublication asNormalisedPublication() {
         populateFromComponent();
-        DomainObjectSet<MavenArtifact> existingDerivedArtifacts = this.derivedArtifacts.matching(new Spec<MavenArtifact>() {
+        Set<MavenArtifact> artifactsToBePublished = CompositeDomainObjectSet.create(MavenArtifact.class, mainArtifacts, metadataArtifacts, derivedArtifacts).matching(new Spec<MavenArtifact>() {
             @Override
             public boolean isSatisfiedBy(MavenArtifact artifact) {
                 return artifact.getFile().exists();
             }
         });
-        Set<MavenArtifact> artifactsToBePublished = CompositeDomainObjectSet.create(MavenArtifact.class, mainArtifacts, metadataArtifacts, existingDerivedArtifacts);
         return new MavenNormalizedPublication(name, pom.getPackaging(), getPomArtifact(), projectIdentity, artifactsToBePublished, determineMainArtifact());
     }
 
